@@ -52,13 +52,14 @@ func NewPool(size int) (*Pool, error) {
 }
 
 // Submit submits a task to this pool.
-func (p *Pool) Submit(task Task) error {
+// Submit will panic while pool has been closed.
+func (p *Pool) Submit(task Task) {
 	if atomic.LoadInt32(&p.release) == CLOSED {
-		return ErrPoolClosed
+		panic(ErrPoolClosed)
 	}
 	p.wg.Add(1)
 	p.retrieveWorker().task <- task
-	return nil
+	return
 }
 
 // Running returns the number of the currently running goroutines.
