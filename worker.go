@@ -18,15 +18,20 @@ func (w *Worker) run() {
 	w.pool.incRunning()
 	go func() {
 		defer func() {
-			if p := recover(); p != nil {
-				w.pool.decRunning()
-				w.pool.workerCache.Put(w)
-				log.Printf("worker exits from a panic: %v\n", p)
-
-				var buf [4096]byte
-				n := runtime.Stack(buf[:], false)
-				log.Printf("worker exits from panic: %s\n", string(buf[:n]))
+			p := recover()
+			if p == nil {
+				return
 			}
+			// Make sure wait_group have the right value.
+			w.pool.wg.Done()
+
+			w.pool.decRunning()
+			w.pool.workerCache.Put(w)
+			log.Printf("worker exits from a panic: %v\n", p)
+
+			var buf [4096]byte
+			n := runtime.Stack(buf[:], false)
+			log.Printf("worker exits from panic: %s\n", string(buf[:n]))
 		}()
 
 		for f := range w.task {
