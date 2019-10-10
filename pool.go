@@ -36,9 +36,9 @@ type Pool struct {
 }
 
 // NewPool generates an instance of ants pool.
-func NewPool(size int) (*Pool, error) {
+func NewPool(size int) *Pool {
 	if size <= 0 {
-		return nil, ErrInvalidPoolSize
+		panic(ErrInvalidPoolSize)
 	}
 	var p *Pool
 	p = &Pool{
@@ -48,7 +48,7 @@ func NewPool(size int) (*Pool, error) {
 	}
 
 	p.cond = sync.NewCond(&p.lock)
-	return p, nil
+	return p
 }
 
 // Submit submits a task to this pool.

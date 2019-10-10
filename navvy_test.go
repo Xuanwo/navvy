@@ -17,7 +17,7 @@ func (st *sleepTask) Run() {
 }
 
 func TestNewPool(t *testing.T) {
-	p, _ := NewPool(10)
+	p := NewPool(10)
 	defer p.Release()
 
 	start := time.Now()
