@@ -41,7 +41,7 @@ func (w *Worker) run() {
 				return
 			}
 
-			f.Run()
+			f.Run(f.Context())
 			w.pool.wg.Done()
 
 			if ok := w.pool.revertWorker(w); !ok {
