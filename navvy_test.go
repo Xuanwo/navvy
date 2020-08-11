@@ -1,6 +1,7 @@
 package navvy
 
 import (
+	"context"
 	"log"
 	"testing"
 	"time"
@@ -10,7 +11,11 @@ type sleepTask struct {
 	id int
 }
 
-func (st *sleepTask) Run() {
+func (st *sleepTask) Context() context.Context {
+	return nil
+}
+
+func (st *sleepTask) Run(_ context.Context) {
 	log.Printf("Task %d start", st.id)
 	time.Sleep(time.Second)
 	log.Printf("Task %d finished", st.id)
